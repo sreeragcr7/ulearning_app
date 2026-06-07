@@ -20,8 +20,7 @@ class CourseDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TAppBar(title: title),
-
+      appBar: TAppBar(title: 'Course details'),
       body: SafeArea(
         top: false,
         child: SingleChildScrollView(

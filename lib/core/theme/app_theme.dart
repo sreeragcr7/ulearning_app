@@ -30,5 +30,12 @@ class AppTheme {
     textTheme: AppTextTheme.darkTextTheme, // reuse for now
     inputDecorationTheme: AppInputTheme.darkInputDecorationTheme,
     cardTheme: CardThemeData(elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+    appBarTheme: const AppBarTheme(
+      centerTitle: true,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+    ),
   );
 }

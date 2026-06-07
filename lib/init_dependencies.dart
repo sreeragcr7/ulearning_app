@@ -5,6 +5,7 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ulearning_app/core/common/cubit/app_user_cubit.dart';
 import 'package:ulearning_app/core/network/internet_connection_check.dart';
+import 'package:ulearning_app/core/utils/helpers/helper_function.dart';
 import 'package:ulearning_app/core/utils/local_storage.dart';
 import 'package:ulearning_app/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:ulearning_app/features/auth/data/repositories/auth_repository_impl.dart';
@@ -15,6 +16,13 @@ import 'package:ulearning_app/features/auth/domain/usecases/logout.dart';
 import 'package:ulearning_app/features/auth/domain/usecases/user_login.dart';
 import 'package:ulearning_app/features/auth/domain/usecases/user_signup.dart';
 import 'package:ulearning_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:ulearning_app/features/course/data/datasources/course_remote_data_source.dart';
+import 'package:ulearning_app/features/course/data/repositories/course_repository_impl.dart';
+import 'package:ulearning_app/features/course/domain/repository/course_repository.dart';
+import 'package:ulearning_app/features/course/domain/usecases/get_course_by_id.dart';
+import 'package:ulearning_app/features/course/domain/usecases/get_courses.dart';
+import 'package:ulearning_app/features/course/domain/usecases/get_newest_courses.dart';
+import 'package:ulearning_app/features/course/domain/usecases/get_popular_courses.dart';
 import 'package:ulearning_app/features/navigation/presentation/bloc/nav_bloc.dart';
 
 final getIt = GetIt.instance;
@@ -40,13 +48,15 @@ Future<void> initDependencies() async {
     getIt.registerLazySingleton(() => supabase.client);
 
     //Internet connection
-    getIt.registerFactory(() => InternetConnection());
-    getIt.registerFactory<InternetConnectionCheck>(() => InternetConnectionCheckImpl(getIt()));
+    getIt.registerLazySingleton(() => InternetConnection());
+    getIt.registerLazySingleton<InternetConnectionCheck>(() => InternetConnectionCheckImpl(getIt()));
+    getIt.registerLazySingleton(() => RepositoryHelper(getIt<InternetConnectionCheck>()));
 
     getIt.registerLazySingleton(() => AppUserCubit());
 
     //Initialize dependencies
     _initAuth();
+    _initCourses();
 
     //Core dependencies
     getIt.registerFactory(() => NavBloc());
@@ -78,4 +88,14 @@ void _initAuth() {
         authStateChanges: getIt(),
       ),
     );
+}
+
+void _initCourses() {
+  getIt
+    ..registerFactory<CourseRemoteDataSource>(() => CourseRemoteDataSourceImpl(getIt<SupabaseClient>()))
+    ..registerFactory<CourseRepository>(() => CourseRepositoryImpl(getIt<CourseRemoteDataSource>(), getIt()))
+    ..registerFactory(() => GetCourses(getIt()))
+    ..registerFactory(() => GetPopularCourses(getIt()))
+    ..registerFactory(() => GetNewestCourses(getIt()))
+    ..registerFactory(() => GetCourseById(getIt()));
 }

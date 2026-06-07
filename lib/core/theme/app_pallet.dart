@@ -6,9 +6,9 @@ class AppPallet {
   AppPallet._();
 
   // 🎨 Primary Fun Colors
-  static const Color primary = Color(0xFF6C5CE7); // playful purple
-  static const Color secondary = Color(0xFFFFB703); // cheerful yellow
-  static const Color accent = Color(0xFF00C896); // fresh mint green
+  static const Color primary = Color(0xFF6C5CE7); 
+  static const Color secondary = Color(0xFFFFB703); 
+  static const Color accent = Color(0xFF00C896); 
 
   // 🌈 Background
   static const Color background = Color(0xFFF4F6FF);
