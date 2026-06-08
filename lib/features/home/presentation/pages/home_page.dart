@@ -3,10 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ulearning_app/core/common/cubit/app_user_cubit.dart';
 import 'package:ulearning_app/core/common/widgets/loader.dart';
 import 'package:ulearning_app/core/common/widgets/t_app_bar.dart';
+import 'package:ulearning_app/core/utils/constants/enums.dart';
 import 'package:ulearning_app/core/utils/constants/sizes.dart';
 import 'package:ulearning_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ulearning_app/features/auth/presentation/pages/login_page.dart';
 import 'package:ulearning_app/core/common/widgets/banner_carousel.dart';
+import 'package:ulearning_app/features/course/presentation/bloc/course_bloc.dart';
+import 'package:ulearning_app/features/course/presentation/bloc/course_state.dart';
 import 'package:ulearning_app/features/home/presentation/widgets/category_selector.dart';
 import 'package:ulearning_app/features/course/presentation/widgets/course_grid.dart';
 import 'package:ulearning_app/features/home/presentation/widgets/greeting_text.dart';
@@ -14,8 +17,20 @@ import 'package:ulearning_app/features/home/presentation/widgets/home_drawer.dar
 import 'package:ulearning_app/core/common/widgets/search/search_filter.dart';
 import 'package:ulearning_app/core/common/widgets/section_header.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<CourseBloc>().add(LoadCourses());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +75,18 @@ class HomePage extends StatelessWidget {
                       const SizedBox(height: 12),
                       CategorySelector(),
                       const SizedBox(height: 20),
-                      CourseGrid(),
+                      BlocBuilder<CourseBloc, CourseState>(
+                        builder: (context, state) {
+                          if (state.status == CourseStatus.loading) {
+                            return const Loader();
+                          }
+
+                          if (state.status == CourseStatus.failure) {
+                            return Text(state.errorMessage ?? 'Something went wrong');
+                          }
+                          return CourseGrid(courses: state.allCourses);
+                        },
+                      ),
                     ],
                   ),
                 ),

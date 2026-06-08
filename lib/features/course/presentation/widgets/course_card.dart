@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ulearning_app/core/common/entities/course.dart';
 import 'package:ulearning_app/core/routes/app_routes.dart';
 
 class CourseCard extends StatelessWidget {
-  const CourseCard({super.key, required this.title, required this.imageUrl, required this.subtitle});
+  const CourseCard({super.key, required this.course});
 
-  final String title;
-  final String subtitle;
-  final String imageUrl;
+  final Course course;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +16,7 @@ class CourseCard extends StatelessWidget {
         Navigator.pushNamed(
           context,
           AppRoutes.courseDetails,
-          arguments: {'title': title, 'subTitle': subtitle, 'imageUrl': imageUrl},
+          arguments: course.id,
         );
       },
       child: Card(
@@ -26,9 +25,9 @@ class CourseCard extends StatelessWidget {
           children: [
             // Background Image
             Positioned.fill(
-              child: imageUrl.isEmpty
+              child: course.thumbnailUrl.isEmpty
                   ? Container(color: color.surfaceContainerHighest)
-                  : Image.network(imageUrl, fit: BoxFit.cover),
+                  : Image.network(course.thumbnailUrl, fit: BoxFit.cover),
             ),
 
             // Gradient overlay (for readability)
@@ -54,7 +53,7 @@ class CourseCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    title,
+                    course.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(
@@ -63,7 +62,7 @@ class CourseCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4), // spacing between title & subtitle
                   Text(
-                    subtitle,
+                    course.subtitle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withAlpha(180)),

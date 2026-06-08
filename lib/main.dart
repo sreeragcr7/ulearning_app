@@ -7,6 +7,7 @@ import 'package:ulearning_app/core/common/cubit/app_user_cubit.dart';
 import 'package:ulearning_app/core/routes/app_router.dart';
 import 'package:ulearning_app/core/theme/app_theme.dart';
 import 'package:ulearning_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:ulearning_app/features/course/presentation/bloc/course_bloc.dart';
 import 'package:ulearning_app/features/navigation/presentation/bloc/nav_bloc.dart';
 import 'package:ulearning_app/features/onboarding/cubit/on_boarding_cubit.dart';
 import 'package:ulearning_app/init_dependencies.dart';
@@ -22,6 +23,7 @@ void main() async {
         BlocProvider(create: (_) => OnBoardingCubit()),
         BlocProvider(create: (_) => getIt<AuthBloc>()),
         BlocProvider(create: (_) => getIt<NavBloc>()),
+        BlocProvider(create: (_) => getIt<CourseBloc>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),

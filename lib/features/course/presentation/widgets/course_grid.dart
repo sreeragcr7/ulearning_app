@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:ulearning_app/core/common/entities/course.dart';
 import 'package:ulearning_app/features/course/presentation/widgets/course_card.dart';
-import 'package:ulearning_app/mock_course_data.dart';
 
 class CourseGrid extends StatelessWidget {
-  const CourseGrid({super.key});
+  const CourseGrid({super.key, required this.courses});
+
+  final List<Course> courses;
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: mockCourses.length,
+      itemCount: courses.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         mainAxisSpacing: 12,
@@ -18,8 +20,8 @@ class CourseGrid extends StatelessWidget {
         childAspectRatio: 1.3,
       ),
       itemBuilder: (context, index) {
-        final course = mockCourses[index];
-        return CourseCard(title: course.title, subtitle: course.subtitle, imageUrl: course.imageUrl);
+        final course = courses[index];
+        return CourseCard(course: course);
       },
     );
   }

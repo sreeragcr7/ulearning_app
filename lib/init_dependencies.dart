@@ -23,6 +23,7 @@ import 'package:ulearning_app/features/course/domain/usecases/get_course_by_id.d
 import 'package:ulearning_app/features/course/domain/usecases/get_courses.dart';
 import 'package:ulearning_app/features/course/domain/usecases/get_newest_courses.dart';
 import 'package:ulearning_app/features/course/domain/usecases/get_popular_courses.dart';
+import 'package:ulearning_app/features/course/presentation/bloc/course_bloc.dart';
 import 'package:ulearning_app/features/navigation/presentation/bloc/nav_bloc.dart';
 
 final getIt = GetIt.instance;
@@ -97,5 +98,6 @@ void _initCourses() {
     ..registerFactory(() => GetCourses(getIt()))
     ..registerFactory(() => GetPopularCourses(getIt()))
     ..registerFactory(() => GetNewestCourses(getIt()))
-    ..registerFactory(() => GetCourseById(getIt()));
+    ..registerFactory(() => GetCourseById(getIt()))
+    ..registerFactory(() => CourseBloc(getCourses: getIt()));
 }
