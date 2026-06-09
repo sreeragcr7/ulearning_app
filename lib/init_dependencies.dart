@@ -16,6 +16,11 @@ import 'package:ulearning_app/features/auth/domain/usecases/logout.dart';
 import 'package:ulearning_app/features/auth/domain/usecases/user_login.dart';
 import 'package:ulearning_app/features/auth/domain/usecases/user_signup.dart';
 import 'package:ulearning_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:ulearning_app/features/banner/data/datasources/banner_remote_data_source.dart';
+import 'package:ulearning_app/features/banner/data/repositories/banner_repository_impl.dart';
+import 'package:ulearning_app/features/banner/domain/repository/banner_repository.dart';
+import 'package:ulearning_app/features/banner/domain/usecases/banners_usecase.dart';
+import 'package:ulearning_app/features/banner/presentation/bloc/banner_bloc.dart';
 import 'package:ulearning_app/features/course/data/datasources/course_remote_data_source.dart';
 import 'package:ulearning_app/features/course/data/repositories/course_repository_impl.dart';
 import 'package:ulearning_app/features/course/domain/repository/course_repository.dart';
@@ -58,6 +63,7 @@ Future<void> initDependencies() async {
     //Initialize dependencies
     _initAuth();
     _initCourses();
+    _initBanner();
 
     //Core dependencies
     getIt.registerFactory(() => NavBloc());
@@ -99,5 +105,13 @@ void _initCourses() {
     ..registerFactory(() => GetPopularCourses(getIt()))
     ..registerFactory(() => GetNewestCourses(getIt()))
     ..registerFactory(() => GetCourseById(getIt()))
-    ..registerFactory(() => CourseBloc(getCourses: getIt()));
+    ..registerFactory(() => CourseBloc(getCourses: getIt(), getCourseById: getIt()));
+}
+
+void _initBanner() {
+  getIt
+    ..registerFactory<BannerRemoteDataSource>(() => BannerRemoteDataSourceImpl(supabase: getIt<SupabaseClient>()))
+    ..registerFactory<BannerRepository>(() => BannerRepositoryImpl(getIt<BannerRemoteDataSource>(), getIt()))
+    ..registerFactory(() => BannersUsecase(getIt()))
+    ..registerFactory(() => BannerBloc(bannersUsecase: getIt()));
 }

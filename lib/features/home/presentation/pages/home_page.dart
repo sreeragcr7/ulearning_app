@@ -8,6 +8,7 @@ import 'package:ulearning_app/core/utils/constants/sizes.dart';
 import 'package:ulearning_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ulearning_app/features/auth/presentation/pages/login_page.dart';
 import 'package:ulearning_app/core/common/widgets/banner_carousel.dart';
+import 'package:ulearning_app/features/banner/presentation/bloc/banner_bloc.dart';
 import 'package:ulearning_app/features/course/presentation/bloc/course_bloc.dart';
 import 'package:ulearning_app/features/course/presentation/bloc/course_state.dart';
 import 'package:ulearning_app/features/home/presentation/widgets/category_selector.dart';
@@ -29,7 +30,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
+
     context.read<CourseBloc>().add(LoadCourses());
+    context.read<BannerBloc>().add(LoadBanners());
   }
 
   @override
@@ -60,7 +63,7 @@ class _HomePageState extends State<HomePage> {
 
               return SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: TSizes.screenPadding, vertical: TSizes.screenTop),
+                  padding: EdgeInsets.symmetric(horizontal: TSizes.screenPadding - 10, vertical: TSizes.screenTop),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,11 +80,11 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(height: 20),
                       BlocBuilder<CourseBloc, CourseState>(
                         builder: (context, state) {
-                          if (state.status == CourseStatus.loading) {
+                          if (state.status == RequestStatus.loading) {
                             return const Loader();
                           }
 
-                          if (state.status == CourseStatus.failure) {
+                          if (state.status == RequestStatus.failure) {
                             return Text(state.errorMessage ?? 'Something went wrong');
                           }
                           return CourseGrid(courses: state.allCourses);

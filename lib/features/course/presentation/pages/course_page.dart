@@ -23,7 +23,7 @@ class _CoursePageState extends State<CoursePage> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: TSizes.screenPadding, vertical: TSizes.screenTop),
+              padding: EdgeInsets.symmetric(horizontal: TSizes.screenPadding - 10, vertical: TSizes.screenTop),
               child: Column(
                 children: [
                   BannerCarousel(),

@@ -4,7 +4,7 @@ import 'package:ulearning_app/core/utils/constants/enums.dart';
 
 class CourseState extends Equatable {
   const CourseState({
-    this.status = CourseStatus.initial,
+    this.status = RequestStatus.initial,
     this.errorMessage,
     this.allCourses = const [],
     this.popularCourses = const [],
@@ -12,7 +12,7 @@ class CourseState extends Equatable {
     this.selectedCourse,
   });
 
-  final CourseStatus status;
+  final RequestStatus status;
   final String? errorMessage;
   final List<Course> allCourses;
   final List<Course> popularCourses;
@@ -20,7 +20,7 @@ class CourseState extends Equatable {
   final Course? selectedCourse;
 
   CourseState copyWith({
-    CourseStatus? status,
+    RequestStatus? status,
     String? errorMessage,
     List<Course>? allCourses,
     List<Course>? popularCourses,

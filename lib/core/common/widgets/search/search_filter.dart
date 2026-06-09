@@ -48,7 +48,7 @@ class _SearchFilterState extends State<SearchFilter> {
             duration: const Duration(milliseconds: 200),
             opacity: _isSearching ? 0 : 1,
             child: Container(
-              width: 48,
+              width: double.infinity,
               height: 48,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:ulearning_app/core/common/widgets/dot_indicator.dart';
+import 'package:ulearning_app/core/common/widgets/loader.dart';
+import 'package:ulearning_app/core/utils/constants/enums.dart';
+import 'package:ulearning_app/features/banner/presentation/bloc/banner_bloc.dart';
 
 class BannerCarousel extends StatefulWidget {
   const BannerCarousel({super.key});
@@ -13,7 +17,11 @@ class _BannerCarouselState extends State<BannerCarousel> {
   late PageController _controller;
   int _currentIndex = 0;
 
-  final List<String> _images = ['assets/icons/Art.png', 'assets/icons/image_1.png', 'assets/icons/image_2.png'];
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -26,49 +34,67 @@ class _BannerCarouselState extends State<BannerCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 160,
-          child: PageView.builder(
-            controller: _controller,
-            itemBuilder: (context, index) {
-              final imageIndex = index % _images.length;
+    return BlocBuilder<BannerBloc, BannerState>(
+      builder: (context, state) {
+        if (state.status == RequestStatus.loading) {
+          return const Loader();
+        }
+        if (state.status == RequestStatus.failure) {
+          return Center(child: Text(state.errorMessage ?? 'Failed to load banners'));
+        }
 
-              return Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(
-                    _images[imageIndex],
-                    fit: BoxFit.cover,
-                    frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-                      if (wasSynchronouslyLoaded) return child;
+        final banners = state.banners;
 
-                      return frame == null
-                          ? Shimmer.fromColors(
-                              baseColor: Colors.grey.shade300,
-                              highlightColor: Colors.grey.shade100,
-                              child: Container(color: Colors.white),
-                            )
-                          : child;
-                    },
-                  ),
-                ),
-              );
-            },
-            onPageChanged: (index) {
-              setState(() {
-                _currentIndex = index % _images.length;
-              });
-            },
-          ),
-        ),
+        if (banners.isEmpty) {
+          return const SizedBox();
+        }
+        return Column(
+          children: [
+            SizedBox(
+              height: 160,
+              child: PageView.builder(
+                controller: _controller,
+                itemBuilder: (context, index) {
+                  final bannerIndex = index % banners.length;
 
-        const SizedBox(height: 12),
+                  final banner = banners[bannerIndex];
 
-        TDotIndicator(dotCount: _images.length, activeIndex: _currentIndex),
-      ],
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.network(
+                        banner.imageUrl,
+                        fit: BoxFit.cover,
+                        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                          if (wasSynchronouslyLoaded) return child;
+
+                          return frame == null
+                              ? Shimmer.fromColors(
+                                  baseColor: Colors.grey.shade300,
+                                  highlightColor: Colors.grey.shade100,
+                                  child: Container(color: Colors.white),
+                                )
+                              : child;
+                        },
+                      ),
+                    ),
+                  );
+                },
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentIndex = index % banners.length;
+                  });
+                },
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            TDotIndicator(dotCount: banners.length, activeIndex: _currentIndex),
+          ],
+        );
+      },
     );
   }
 }
