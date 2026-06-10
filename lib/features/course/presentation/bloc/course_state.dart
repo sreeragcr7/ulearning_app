@@ -10,6 +10,8 @@ class CourseState extends Equatable {
     this.popularCourses = const [],
     this.newestCourses = const [],
     this.selectedCourse,
+    this.selectedFilter = CourseFilter.all,
+    this.searchQuery = '',
   });
 
   final RequestStatus status;
@@ -18,8 +20,12 @@ class CourseState extends Equatable {
   final List<Course> popularCourses;
   final List<Course> newestCourses;
   final Course? selectedCourse;
+  final CourseFilter selectedFilter;
+  final String searchQuery;
 
   CourseState copyWith({
+    String? searchQuery,
+    CourseFilter? selectedFilter,
     RequestStatus? status,
     String? errorMessage,
     List<Course>? allCourses,
@@ -28,6 +34,8 @@ class CourseState extends Equatable {
     Course? selectedCourse,
   }) {
     return CourseState(
+      searchQuery: searchQuery ?? this.searchQuery,
+      selectedFilter: selectedFilter ?? this.selectedFilter,
       status: status ?? this.status,
       errorMessage: errorMessage,
       allCourses: allCourses ?? this.allCourses,
@@ -37,8 +45,40 @@ class CourseState extends Equatable {
     );
   }
 
+  List<Course> get filteredCourses {
+    switch (selectedFilter) {
+      case CourseFilter.all:
+        return allCourses;
+      case CourseFilter.popular:
+        return popularCourses;
+      case CourseFilter.newest:
+        return newestCourses;
+    }
+  }
+
+  List<Course> get searchedCourses {
+    final courses = filteredCourses;
+    if (searchQuery.trim().isEmpty) {
+      return courses;
+    }
+
+    return courses.where((course) {
+      return course.title.toLowerCase().contains(searchQuery.toLowerCase()) ||
+          course.subtitle.toLowerCase().contains(searchQuery.toLowerCase());
+    }).toList();
+  }
+
   @override
-  List<Object?> get props => [status, errorMessage, allCourses, popularCourses, newestCourses, selectedCourse];
+  List<Object?> get props => [
+    status,
+    errorMessage,
+    allCourses,
+    popularCourses,
+    newestCourses,
+    selectedCourse,
+    selectedFilter,
+    searchQuery,
+  ];
 }
 
 // final class CourseInitial extends CourseState {}

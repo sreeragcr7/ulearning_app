@@ -15,19 +15,39 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
       super(const CourseState()) {
     on<LoadCourses>(_onLoadCourses);
     on<LoadCourseDetails>(_onLoadCourseDetails);
+    on<ChangeCourseFilter>(_onChangeCourseFilter);
+    on<SearchCourse>(_onSearchCourse);
   }
 
   final GetCourses _getCourses;
   final GetCourseById _getCourseById;
 
+  Future<void> _onSearchCourse(SearchCourse event, Emitter<CourseState> emit) async {
+    emit(state.copyWith(searchQuery: event.query));
+  }
+
+  Future<void> _onChangeCourseFilter(ChangeCourseFilter event, Emitter<CourseState> emit) async {
+    emit(state.copyWith(selectedFilter: event.filter));
+  }
+
   Future<void> _onLoadCourses(LoadCourses event, Emitter<CourseState> emit) async {
     emit(state.copyWith(status: RequestStatus.loading));
 
     final result = await _getCourses(NoParams());
-    result.fold(
-      (failure) => emit(state.copyWith(status: RequestStatus.failure, errorMessage: failure.message)),
-      (courses) => emit(state.copyWith(status: RequestStatus.success, allCourses: courses)),
-    );
+    result.fold((failure) => emit(state.copyWith(status: RequestStatus.failure, errorMessage: failure.message)), (
+      courses,
+    ) {
+      final popularCourses = courses.where((course) => course.isPopular).toList();
+      final newestCourses = [...courses]..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      emit(
+        state.copyWith(
+          status: RequestStatus.success,
+          allCourses: courses,
+          popularCourses: popularCourses,
+          newestCourses: newestCourses,
+        ),
+      );
+    });
   }
 
   Future<void> _onLoadCourseDetails(LoadCourseDetails event, Emitter<CourseState> emit) async {

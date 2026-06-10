@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ulearning_app/features/course/presentation/bloc/course_bloc.dart';
 
 class CourseSearchBar extends StatefulWidget {
   const CourseSearchBar({super.key, required this.focusNode, required this.onSubmitted});
@@ -40,12 +42,17 @@ class _CourseSearchBarState extends State<CourseSearchBar> {
             icon: const Icon(Icons.close),
             onPressed: () {
               _controller.clear();
+              context.read<CourseBloc>().add(SearchCourse(''));
               setState(() {});
             },
           ),
       ],
 
-      onChanged: (_) => setState(() {}),
+      onChanged: (value) {
+        setState(() {});
+
+        context.read<CourseBloc>().add(SearchCourse(value));
+      },
 
       onSubmitted: (_) => widget.onSubmitted(),
     );

@@ -18,7 +18,7 @@ class GradientList extends StatelessWidget {
 
   final Widget leading;
   final bool showTrailing;
-  final String? subTitle;
+  final Object? subTitle;
   final Widget? trailing;
   final String title;
   // final double? iconSize;
@@ -78,7 +78,7 @@ class GradientList extends StatelessWidget {
                       if (subTitle != null) ...[
                         const SizedBox(height: 4),
                         Text(
-                          subTitle!,
+                          subTitle.toString(),
                           style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.grey, fontSize: 13),
                         ),
                       ],

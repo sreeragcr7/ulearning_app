@@ -7,18 +7,16 @@ class GradientListView extends StatelessWidget {
 
   final List<GradientListModel> items;
   final EdgeInsetsGeometry? contentPadding;
-
   final bool shrinkWrap;
   final ScrollPhysics? physics;
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      itemCount: items.length,
       shrinkWrap: shrinkWrap,
       physics: physics,
       padding: const EdgeInsets.only(bottom: 20),
-
-      itemCount: items.length,
 
       separatorBuilder: (_, _) => const SizedBox(height: 4),
 
@@ -32,7 +30,7 @@ class GradientListView extends StatelessWidget {
           trailing: item.trailing,
           titleSize: item.titleSize,
           contentPadding: contentPadding,
-          onTap: item.route != null ? () => Navigator.pushNamed(context, item.route!) : null,
+          onTap: item.route == null ? null : () => Navigator.pushNamed(context, item.route!),
         );
       },
     );

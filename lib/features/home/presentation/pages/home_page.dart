@@ -30,7 +30,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-
     context.read<CourseBloc>().add(LoadCourses());
     context.read<BannerBloc>().add(LoadBanners());
   }
@@ -87,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                           if (state.status == RequestStatus.failure) {
                             return Text(state.errorMessage ?? 'Something went wrong');
                           }
-                          return CourseGrid(courses: state.allCourses);
+                          return CourseGrid(courses: state.filteredCourses);
                         },
                       ),
                     ],

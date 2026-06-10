@@ -36,6 +36,8 @@ class _BannerCarouselState extends State<BannerCarousel> {
   Widget build(BuildContext context) {
     return BlocBuilder<BannerBloc, BannerState>(
       builder: (context, state) {
+        print('Banner State: ${state.status}');
+        print('Banner Count: ${state.banners.length}');
         if (state.status == RequestStatus.loading) {
           return const Loader();
         }

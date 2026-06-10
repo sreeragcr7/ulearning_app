@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ulearning_app/core/common/cubit/app_user_cubit.dart';
+import 'package:ulearning_app/core/common/widgets/gradient/gradient_list_view.dart';
 import 'package:ulearning_app/core/common/widgets/loader.dart';
 import 'package:ulearning_app/core/common/widgets/t_app_bar.dart';
 import 'package:ulearning_app/core/utils/constants/sizes.dart';
 import 'package:ulearning_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ulearning_app/features/profile/presentation/widgets/profile_chips.dart';
-import 'package:ulearning_app/core/common/widgets/gradient/gradient_list_view.dart';
 import 'package:ulearning_app/features/profile/presentation/widgets/profile_list_items.dart';
 
 class ProfilePage extends StatelessWidget {
